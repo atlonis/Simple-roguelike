@@ -17,7 +17,6 @@ class Entity:
         self.item = item
         self.inventory = inventory
 
-
         if self.fighter:
             self.fighter.owner = self
 
@@ -90,6 +89,9 @@ class Entity:
 
             # Delete the path to free memory
         libtcod.path_delete(my_path)
+
+    def distance(self, x, y):
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
 
     def distance_to(self, other):
         dx = other.x - self.x

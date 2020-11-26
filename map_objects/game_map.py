@@ -8,7 +8,8 @@ from components.ai import BasicMonster
 from components.fighter import Fighter
 from render_functions import RenderOrder
 from components.item import Item
-from item_functions import cast_lightning, heal
+from game_messages import Message
+from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 
 class GameMap:
     def __init__(self, width, height):
@@ -130,11 +131,23 @@ class GameMap:
                     item_component = Item(use_function=heal, amount=4)
                     item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
                                   item=item_component)
+
+                elif item_chance < 80:
+                    item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
+                        'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
+                        damage=12, radius=3)
+                    item = Entity(x, y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
+                                  item=item_component)
+                elif item_chance < 90:
+                    item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message(
+                        'Left-click an enemy to confuse it, or right-click to cancel.', libtcod.light_cyan))
+                    item = Entity(x, y, '#', libtcod.light_pink, 'Confusion Scroll', render_order=RenderOrder.ITEM,
+                                  item=item_component)
                 else:
-                    item_component = Item(use_function=cast_lightning, damage=20, maximum_range=5)
+                    item_component = Item(
+                        use_function=cast_lightning, damage=20, maximum_range=5)
                     item = Entity(x, y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
                                   item=item_component)
-
 
                 entities.append(item)
 
